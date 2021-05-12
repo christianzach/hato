@@ -361,4 +361,10 @@
     (let [r ((wrap-multipart identity) {:multipart [{:name "title" :content "My Awesome Picture"}]})]
       (is (instance? InputStream (:body r)))
       (is (re-matches #"^multipart/form-data; boundary=[a-zA-Z0-9_]+$" (-> r :headers (get "content-type"))))
+      (is (nil? (:multipart r)))))
+  
+    (testing "with multipart/mixed option"
+    (let [r ((wrap-multipart identity) {:multipart [{:name "title" :content "My Awesome Picture"}] :multipart-mixed? true})]
+      (is (instance? InputStream (:body r)))
+      (is (re-matches #"^multipart/mixed; boundary=[a-zA-Z0-9_]+$" (-> r :headers (get "content-type"))))
       (is (nil? (:multipart r))))))

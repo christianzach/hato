@@ -690,13 +690,13 @@
 
 (defn multipart-request
   "Adds appropriate body and header if making a multipart request."
-  [{:keys [multipart] :as req}]
+  [{:keys [multipart multipart-mixed?] :as req}]
   (if multipart
     (let [b (multipart/boundary)]
       (-> req
           (dissoc :multipart)
           (assoc :body (multipart/body multipart b))
-          (update :headers assoc "content-type" (str "multipart/form-data; boundary=" b))))
+          (update :headers assoc "content-type" (str "multipart/" (if multipart-mixed? "mixed" "form-data") "; boundary=" b))))
     req))
 
 (defn wrap-multipart

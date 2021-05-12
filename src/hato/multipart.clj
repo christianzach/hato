@@ -103,7 +103,7 @@
            {:name "file" :content (io/file ".nrepl-port")}])
 
   ; Create the body
-  (body ms b)
+  (slurp(body ms b))
 
   ; Copy to out for testing
   (with-open [xin (io/input-stream *1)
