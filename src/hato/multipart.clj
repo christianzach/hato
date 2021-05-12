@@ -74,13 +74,16 @@
   ...more components
   --hatoBoundary....--\r
   "
-  [ms b]
-  (let [in-stream (PipedInputStream.)
+  ([ms b]
+   (body ms b nil))
+  ([ms b multipart-mixed?]
+   (let [in-stream (PipedInputStream.)
         out-stream (PipedOutputStream. in-stream)]
     (.start (Thread. #(do (doseq [m ms
                                   s [(str "--" b)
-                                     line-break
-                                     (content-disposition m)
+                                    (if multipart-mixed?
+                                      "" 
+                                     (str (slurp line-break) (content-disposition m)))
                                      line-break
                                      (content-type m)
                                      line-break
@@ -93,7 +96,7 @@
                           (io/copy (str "--" b "--") out-stream)
                           (io/copy line-break out-stream)
                           (.close out-stream))))
-    in-stream))
+    in-stream)))
 
 (comment
   (def b (boundary))

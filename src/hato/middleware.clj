@@ -695,7 +695,7 @@
     (let [b (multipart/boundary)]
       (-> req
           (dissoc :multipart)
-          (assoc :body (multipart/body multipart b))
+          (assoc :body (multipart/body multipart b multipart-mixed?))
           (update :headers assoc "content-type" (str "multipart/" (if multipart-mixed? "mixed" "form-data") "; boundary=" b))))
     req))
 
